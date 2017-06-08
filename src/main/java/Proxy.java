@@ -5,9 +5,9 @@ import org.apache.http.HttpHost;
  */
 public class Proxy {
 
-    private final HttpHost httpHost;
-    private String userName;
-    private String password;
+    private final HttpHost httpHost; //代理服务器
+    private String userName; //用户名
+    private String password; //密码
 
     public Proxy(HttpHost httpHost, String userName, String password) {
         this.httpHost = httpHost;
@@ -30,6 +30,7 @@ public class Proxy {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
     @Override
     public String toString() {
