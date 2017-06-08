@@ -31,6 +31,9 @@ public class Proxy {
         this.password = password;
     }
 
+    public HttpHost getHttpHost() {
+        return httpHost;
+    }
 
     @Override
     public String toString() {
