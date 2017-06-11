@@ -1,3 +1,5 @@
+package domain;
+
 import org.apache.http.HttpHost;
 
 /**
