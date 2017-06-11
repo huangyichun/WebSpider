@@ -1,3 +1,5 @@
+package domain;
+
 /**
  * 请求URL封装
  */
