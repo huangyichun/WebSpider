@@ -12,7 +12,7 @@ public class Page {
 
     private ResultItems resultItems = new ResultItems();
 
-    private List<Request> targetRequests = new ArrayList<Request>();
+    private List<Request> targetRequests = new ArrayList<>();
 
     private List<Request> helpRequest = new ArrayList<>();
 
