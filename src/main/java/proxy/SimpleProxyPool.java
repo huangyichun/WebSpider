@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 简单代理线程池，通过随机数随机获取代理服务器
+ * 简单代理池，通过随机数随机获取代理服务器
  */
 public class SimpleProxyPool implements ProxyPool{
 
