@@ -6,9 +6,11 @@ package domain;
 public class Request {
 
     private String url;
-    private String method;
+    private String method = "GET";
 
-    public Request() {
+    public Request(String url, String method) {
+        this.url = url;
+        this.method = method;
     }
 
     public Request(String url) {
