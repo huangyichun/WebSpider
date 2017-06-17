@@ -1,4 +1,4 @@
-package domain;
+package selector;
 
 /**
  * Created by huangyichun on 2017/6/17.
