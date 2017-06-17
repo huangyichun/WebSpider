@@ -4,6 +4,7 @@ import domain.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import selector.InformationSelector;
 
 import java.util.List;
 import java.util.Map;
@@ -35,39 +36,44 @@ public class InformationPageProcessor implements PageProcessor {
         List<Request> helpRequests = page.getHelpRequest();
         Document document = Jsoup.parse(page.getHtml());
         document.setBaseUri(site.getDomain());
-        if(request.getUrl().matches(targetUrlPattern)) {
+        if (request.getUrl().matches(targetUrlPattern)) {
             ResultItems resultItems = page.getResultItems();
-            Map<String,Object> map = resultItems.getFields();
-            if(selector.getTitleSelect() != null) {
+            Map<String, Object> map = resultItems.getFields();
+            if (selector.getTitleSelect() != null) {
                 String title = select(page.getHtml(), selector.getTitleSelect());
-                map.put("title", title);
+                if (title != null)
+                    map.put("title", title);
             }
-            if(selector.getTimeSelect() != null) {
-                String time = select(page.getHtml(), selector.getTitleSelect());
-                map.put("time", time);
+            if (selector.getTimeSelect() != null) {
+                String time = select(page.getHtml(), selector.getTimeSelect());
+                if (time != null)
+                    map.put("time", time);
             }
             if (selector.getPicSeclect() != null) {
                 String pic = select(page.getHtml(), selector.getPicSeclect());
-                map.put("pic", pic);
+                if (pic != null)
+                    map.put("pic", pic);
             }
-            if (selector.getCollegeSelect() != null){
+            if (selector.getCollegeSelect() != null) {
                 String college = select(page.getHtml(), selector.getCollegeSelect());
-                map.put("college", college);
+                if (college != null)
+                    map.put("college", college);
             }
             if (selector.getContentSelect() != null) {
-                String content = document.getElementById(selector.getContentSelect()).html();
-                map.put("content", content);
+                String content = document.select(selector.getContentSelect()).html();
+                if (content != null)
+                    map.put("content", content);
             }
 
             map.put("url", request.getUrl());
 
-        }else if (request.getUrl().matches(helpUrlPattern)) {//添加目标url
+        } else if (request.getUrl().matches(helpUrlPattern)) {//添加目标url
             Elements elements = document.select("a");
             elements.forEach(element -> {
                 String url = element.attr("abs:href");
                 if (url.matches(targetUrlPattern)) {
                     targetRequests.add(new Request(url));
-                }else if(url.matches(helpUrlPattern)){
+                } else if (url.matches(helpUrlPattern)) {
                     helpRequests.add(new Request(url));
                 }
             });
@@ -76,6 +82,7 @@ public class InformationPageProcessor implements PageProcessor {
 
     /**
      * 根据正则表达式获取相关信息
+     *
      * @param html
      * @param regex
      * @return
@@ -85,9 +92,8 @@ public class InformationPageProcessor implements PageProcessor {
         Matcher matcher = pattern.matcher(html);
         if (matcher.find()) {
             return matcher.group(1);
-        }else {
-            throw new RuntimeException("正则表达式有误");
         }
+        return null;
     }
 
     public String getHelpUrlPattern() {
