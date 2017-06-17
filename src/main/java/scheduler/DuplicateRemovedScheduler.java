@@ -41,7 +41,8 @@ public class DuplicateRemovedScheduler implements Scheduler {
             try {
                 condition.await(10, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("爬虫结束");
+//                e.printStackTrace();
             }
         }
         return queueUrl.poll();
