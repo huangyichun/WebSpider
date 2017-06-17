@@ -5,6 +5,8 @@ import domain.Request;
 import java.util.HashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,6 +19,7 @@ public class DuplicateRemovedScheduler implements Scheduler {
     HashSet<String> visitedUrl = new HashSet<>();
     BlockingQueue<Request> queueUrl = new LinkedBlockingQueue<>();
     Lock lock = new ReentrantLock();
+    Condition condition = lock.newCondition();
 
     @Override
     public void push(Request request) {
@@ -25,6 +28,7 @@ public class DuplicateRemovedScheduler implements Scheduler {
             if (!visitedUrl.contains(request.getUrl())){
                 visitedUrl.add(request.getUrl());
                 queueUrl.offer(request);
+                condition.signal();
             }
         }finally {
             lock.unlock();
@@ -33,6 +37,13 @@ public class DuplicateRemovedScheduler implements Scheduler {
 
     @Override
     public Request poll() {
+        while (queueUrl.isEmpty()) {
+            try {
+                condition.await(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return queueUrl.poll();
     }
 }
