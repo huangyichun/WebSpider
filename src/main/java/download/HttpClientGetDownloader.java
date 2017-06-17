@@ -48,7 +48,6 @@ public class HttpClientGetDownloader implements Downloader {
             response = httpClient.execute(httpUriRequest);
             if (response.getStatusLine().getStatusCode() == SUCCESS_CODE) {
                 HttpEntity entity = response.getEntity();
-                System.out.println(entity.getContentEncoding());
                 String html = EntityUtils.toString(entity, charset);
                 page = new Page(request,html);
             }
