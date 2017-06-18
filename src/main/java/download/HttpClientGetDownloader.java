@@ -8,6 +8,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
@@ -35,13 +36,17 @@ public class HttpClientGetDownloader implements Downloader {
         } else {
             charset = site.getCharset();
         }
+        HttpClientBuilder clientBuilder = HttpClients.custom();
+        if(site.getProxyPool() != null) {
+            clientBuilder.setProxy(site.getProxyPool().getProxy().getHttpHost());
+        }
 
         RequestBuilder requestBuilder = RequestBuilder.get();
         HttpUriRequest httpUriRequest = requestBuilder.setCharset(Charset.forName(charset))
                 .setUri(request.getUrl())
                 .build();
 
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpClient httpClient = clientBuilder.build();
         CloseableHttpResponse response = null;
         Page page = null;
         try {
