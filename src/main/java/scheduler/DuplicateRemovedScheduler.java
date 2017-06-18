@@ -37,14 +37,22 @@ public class DuplicateRemovedScheduler implements Scheduler {
 
     @Override
     public Request poll() {
-        while (queueUrl.isEmpty()) {
-            try {
-                condition.await(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                System.out.println("爬虫结束");
-//                e.printStackTrace();
+        lock.lock();
+        try {
+            while (queueUrl.isEmpty()) {
+                try {
+                    boolean isEnd = condition.await(10, TimeUnit.SECONDS);
+                    if(!isEnd) {
+                        Thread.currentThread().interrupt();
+                    }
+                } catch (InterruptedException e) {
+                    System.out.println(Thread.currentThread() + ": 爬虫结束");
+                }
             }
+            return queueUrl.poll();
+        } finally {
+            lock.unlock();
         }
-        return queueUrl.poll();
+
     }
 }
