@@ -46,7 +46,8 @@ public class DuplicateRemovedScheduler implements Scheduler {
                         Thread.currentThread().interrupt();
                     }
                 } catch (InterruptedException e) {
-                    System.out.println(Thread.currentThread() + ": 爬虫结束");
+                    System.out.println(Thread.currentThread().getName() + ": 爬虫结束");
+                    return null;
                 }
             }
             return queueUrl.poll();
