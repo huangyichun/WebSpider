@@ -47,7 +47,7 @@ public class Spider implements Runnable {
             while (running) {
                 Request request = scheduler.poll();
                 if (request == null) {
-                    running = false;
+                    executorService.shutdown();
                 } else {
                     Page page = downloader.download(request, site);
                     process.process(page);
