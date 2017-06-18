@@ -30,8 +30,16 @@ public class SpiderTest {
     private String targetUrlPattern;
     private InformationSelector selector;
 
-    @Before
-    public void initData() {
+    public static void main(String[] args) {
+        Site site;
+        Request firstRequest;
+        Downloader downloader;
+        PageProcessor process;
+        Pipeline pipeline;
+        Scheduler scheduler;
+        String helpUrlPattern;
+        String targetUrlPattern;
+        InformationSelector selector;
         site = new Site("http://cs.scu.edu.cn", "GBK");
         helpUrlPattern = "http://cs.scu.edu.cn/cs/xyxw/H9501index.+?htm";
         targetUrlPattern = "http://cs.scu.edu.cn/cs/xyxw/webinfo.+?htm";
@@ -47,14 +55,11 @@ public class SpiderTest {
                 helpUrlPattern, targetUrlPattern, selector);
         pipeline = new ConsolePipeline();
         scheduler = new DuplicateRemovedScheduler();
-    }
-
-    @Test
-    public void run() throws Exception {
-
         Spider spider = new Spider(site, firstRequest, downloader,
                 process, pipeline, scheduler);
+
         spider.run();
+
     }
 
 }
