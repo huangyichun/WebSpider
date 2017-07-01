@@ -1,8 +1,11 @@
 package domain;
 
 import download.Downloader;
+import download.HttpClientGetDownloader;
+import pipeline.ConsolePipeline;
 import pipeline.Pipeline;
 import processor.PageProcessor;
+import scheduler.DuplicateRemovedScheduler;
 import scheduler.Scheduler;
 import threadpool.DefaultThreadPool;
 
@@ -28,6 +31,16 @@ public class Spider implements Runnable {
 
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
+
+    public Spider(Site site, Request firstRequest, PageProcessor process) {
+        this.site = site;
+        this.firstRequest = firstRequest;
+        this.process = process;
+        downloader = new HttpClientGetDownloader();
+        pipeline = new ConsolePipeline();
+        scheduler = new DuplicateRemovedScheduler();
+        scheduler.push(firstRequest);
+    }
 
     public Spider(Site site, Request firstRequest, Downloader downloader, PageProcessor process,
                   Pipeline pipeline, Scheduler scheduler) {
