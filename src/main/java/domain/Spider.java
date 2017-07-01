@@ -41,12 +41,14 @@ public class Spider implements Runnable {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void run() {
         executorService.execute(() -> {
             boolean running = true;
             while (running) {
                 Request request = scheduler.poll();
                 if (request == null) {
+                    running = false;
                     executorService.shutdown();
                 } else {
                     Page page = downloader.download(request, site);
