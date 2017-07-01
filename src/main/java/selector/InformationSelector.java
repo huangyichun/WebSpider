@@ -39,39 +39,44 @@ public class InformationSelector {
         return titleSelect;
     }
 
-    public void setTitleSelect(String titleSelect) {
+    public InformationSelector setTitleSelect(String titleSelect) {
         this.titleSelect = titleSelect;
+        return this;
     }
 
     public String getTimeSelect() {
         return timeSelect;
     }
 
-    public void setTimeSelect(String timeSelect) {
+    public InformationSelector setTimeSelect(String timeSelect) {
         this.timeSelect = timeSelect;
+        return this;
     }
 
     public String getCollegeSelect() {
         return collegeSelect;
     }
 
-    public void setCollegeSelect(String collegeSelect) {
+    public InformationSelector setCollegeSelect(String collegeSelect) {
         this.collegeSelect = collegeSelect;
+        return this;
     }
 
     public String getPicSeclect() {
         return picSeclect;
     }
 
-    public void setPicSeclect(String picSeclect) {
+    public InformationSelector setPicSeclect(String picSeclect) {
         this.picSeclect = picSeclect;
+        return this;
     }
 
     public String getContentSelect() {
         return contentSelect;
     }
 
-    public void setContentSelect(String contentSelect) {
+    public InformationSelector setContentSelect(String contentSelect) {
         this.contentSelect = contentSelect;
+        return this;
     }
 }
