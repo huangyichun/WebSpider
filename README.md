@@ -30,6 +30,7 @@ ResultItems相当于一个Map，它保存PageProcessor处理的结果，供Pipel
     代理服务器对象，保存代理服务器地址和端口号，以及登录的用户名和密码。
 - ProxyPool</br>
     代理服务器池接口，WebSpider实现了简单的代理服务器池，用户可以在resource文件下的proxy.txt中将代理服务器地址和端口复制进去，通过调用SimpleProxyPoll的getProxy方法可以随机使用其中的一个代理服务器进行页面下载。
+- 
 #### 自定义线程池
   该爬虫使用了自定义的线程池，抽象接口为:ThreadPool，提供了执行，结束，添加工作线程和减少工作线程的基本功能。并且实现了一个默认的线程池DefaultThreadPool，该线程池主要是为了更加深入理解多线程而写的，使用者可以将其替换成Java默认的线程池，不影响框架使用。</br>
 线程池接口:
@@ -196,7 +197,40 @@ ResultItems相当于一个Map，它保存PageProcessor处理的结果，供Pipel
 
 #### 程序运行
 使用者可以运行Test的mode包下的SpiderTest的main方法，可以在控制台中打印出四川大学计算机学院400条新闻。
+```
+package domain;
 
+import processor.InformationPageProcessor;
+import processor.PageProcessor;
+import selector.InformationSelector;
+
+/**
+ * Spider测试
+ * Created by huangyichun on 2017/6/17.
+ */
+public class SpiderTest {
+
+    public static void main(String[] args) {
+        Site site = new Site("http://cs.scu.edu.cn", "GBK");
+        String helpUrlPattern = "http://cs.scu.edu.cn/cs/xyxw/H9501index.+?htm";
+        String targetUrlPattern = "http://cs.scu.edu.cn/cs/xyxw/webinfo.+?htm";
+
+        InformationSelector selector = new InformationSelector();
+        selector.setTitleSelect("width=721 height=27 a> <DIV align=center>(.+?)</DIV> <DIV align=center>")
+                .setCollegeSelect("valign=\"bottom\">来源： </SPAN>(.+?)<SPAN class=hangjc")
+                .setTimeSelect("valign=\"bottom\">时间： </SPAN>(.+?)<SPAN")
+                .setPicSeclect("src=\"(/cs/rootimages.+?jpg)\"")
+                .setContentSelect("#BodyLabel");
+
+        Request firstRequest = new Request("http://cs.scu.edu.cn/cs/xyxw/H9501index_1.htm");
+        PageProcessor process = new InformationPageProcessor(site,
+                helpUrlPattern, targetUrlPattern, selector);
+
+        Spider spider = new Spider(site, firstRequest, process);
+        spider.run();
+    }
+}
+```
 
 
 [2]: http://static.zybuluo.com/huangyichun/9iybxvwxpcyp4qg1ht7x5w7c/image.png
