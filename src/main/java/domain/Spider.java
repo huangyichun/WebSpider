@@ -54,16 +54,15 @@ public class Spider implements Runnable {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void run() {
-        executorService.execute(() -> {
-            boolean running = true;
-            while (running) {
-                Request request = scheduler.poll();
-                if (request == null) {
-                    running = false;
-                    executorService.shutdown();
-                } else {
+        boolean running = true;
+        while (running) {
+            Request request = scheduler.poll();
+            if (request == null) {
+                running = false;
+                executorService.shutdown();
+            } else {
+                executorService.execute(()->{
                     Page page = downloader.download(request, site);
                     process.process(page);
                     List<Request> targetUrl = page.getTargetRequests();
@@ -72,9 +71,11 @@ public class Spider implements Runnable {
                     helpUrl.forEach(request1 -> scheduler.push(request1));
                     ResultItems resultItems = page.getResultItems();
                     pipeline.process(resultItems);
-                }
+                });
             }
-        });
+        }
+
+
     }
 
     public Site getSite() {
@@ -124,7 +125,6 @@ public class Spider implements Runnable {
     public void setScheduler(Scheduler scheduler) {
         this.scheduler = scheduler;
     }
-
 
 
     public Lock getLock() {
