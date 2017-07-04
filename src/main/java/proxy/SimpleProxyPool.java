@@ -14,10 +14,18 @@ import java.util.List;
  */
 public class SimpleProxyPool implements ProxyPool{
 
+    private static class SimpleProxyPoolInstance{
+        private static final SimpleProxyPool instance = new SimpleProxyPool();
+    }
+
+    public static SimpleProxyPool getInstance(){
+        return SimpleProxyPoolInstance.instance;
+    }
+
     private List<Proxy> proxyList = new ArrayList<>();
     private final int size;
 
-    public SimpleProxyPool() {
+    private SimpleProxyPool() {
         init();
         size = proxyList.size();
     }
