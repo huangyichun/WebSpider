@@ -29,6 +29,10 @@ public class DefaultThreadPool <Job extends Runnable> implements ThreadPool<Job>
     //互斥修改工作线程列表
     private ReentrantLock workLock = new ReentrantLock();
 
+    public DefaultThreadPool() {
+        initializerWorkers(DEFAULT_WORKER_NUMBERS);
+    }
+
     public DefaultThreadPool(int num) {
         workerNum = num > MAX_WORKER_NUMBERS ? MAX_WORKER_NUMBERS :
                 num < MIN_WOKER_NUMBERS ? MIN_WOKER_NUMBERS : num;
