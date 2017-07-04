@@ -1,7 +1,7 @@
 package selector;
 
 /**
- * Created by huangyichun on 2017/6/17.
+ * 类似新闻或者信息等信息选择器
  */
 public class InformationSelector {
 
