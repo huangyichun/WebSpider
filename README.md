@@ -30,7 +30,7 @@ ResultItems相当于一个Map，它保存PageProcessor处理的结果，供Pipel
     代理服务器对象，保存代理服务器地址和端口号，以及登录的用户名和密码。
 - ProxyPool</br>
     代理服务器池接口，WebSpider实现了简单的代理服务器池，用户可以在resource文件下的proxy.txt中将代理服务器地址和端口复制进去，通过调用SimpleProxyPoll的getProxy方法可以随机使用其中的一个代理服务器进行页面下载。
-- InfomationSelector
+- InfomationSelector</br>
     页面信息选择器，该类主要处理新闻和通知类信息的过滤，用户根据自己的要求传入具体的参数。
 #### 自定义线程池
   该爬虫使用了自定义的线程池，抽象接口为:ThreadPool，提供了执行，结束，添加工作线程和减少工作线程的基本功能。并且实现了一个默认的线程池DefaultThreadPool，该线程池主要是为了更加深入理解多线程而写的，使用者可以将其替换成Java默认的线程池，不影响框架使用。</br>
