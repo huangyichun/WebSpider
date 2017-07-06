@@ -24,13 +24,13 @@ public class DuplicateRemovedScheduler implements Scheduler {
     @Override
     public void push(Request request) {
         lock.lock();
-        try{
-            if (!visitedUrl.contains(request.getUrl())){
+        try {
+            if (!visitedUrl.contains(request.getUrl())) {
                 visitedUrl.add(request.getUrl());
                 queueUrl.offer(request);
                 condition.signal();
             }
-        }finally {
+        } finally {
             lock.unlock();
         }
     }
@@ -40,20 +40,18 @@ public class DuplicateRemovedScheduler implements Scheduler {
         lock.lock();
         try {
             while (queueUrl.isEmpty()) {
-                try {
-                    boolean isEnd = condition.await(10, TimeUnit.SECONDS);
-                    if(!isEnd) {
-                        Thread.currentThread().interrupt();
-                    }
-                } catch (InterruptedException e) {
-                    System.out.println(Thread.currentThread().getName() + ": 爬虫结束");
-                    return null;
+                boolean isEnd = condition.await(10, TimeUnit.SECONDS);
+                if (!isEnd) {
+                    Thread.currentThread().interrupt();
                 }
             }
             return queueUrl.poll();
+        } catch (InterruptedException e) {
+            System.out.println(Thread.currentThread().getName() + ": 爬虫结束");
+
         } finally {
             lock.unlock();
         }
-
+        return null;
     }
 }
