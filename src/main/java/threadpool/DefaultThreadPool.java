@@ -100,6 +100,7 @@ public class DefaultThreadPool <Job extends Runnable> implements ThreadPool<Job>
 
     private final class Worker implements Runnable{
         final Thread thread;
+        //定义为volatile类型，保证可见性，使得其他线程修改，本线程能够看到修改的值
         private volatile boolean running = true;
 
         public Worker() {
@@ -113,14 +114,12 @@ public class DefaultThreadPool <Job extends Runnable> implements ThreadPool<Job>
                 mainLock.lock();
                 try {
                     while(jobs.isEmpty()){
-                        condition.await();
+                        condition.await();//线程在此等待，需要中断才能退出
                     }
                     job = jobs.removeFirst();
                 } catch (InterruptedException e) {
                     //感知外接对WorkerThread进行中断任务
-                    Thread.currentThread().interrupt();
-                    System.out.println("停止当前线程");
-                    return;
+                    System.out.println("停止:" + Thread.currentThread().getName() + " 线程");
                 }finally {
                     mainLock.unlock();
                 }
@@ -135,7 +134,7 @@ public class DefaultThreadPool <Job extends Runnable> implements ThreadPool<Job>
          */
         public void shutdown(){
             running = false;
-            thread.interrupt();
+            thread.interrupt();//必须调用，因为当前线程可能处于等待状态
         }
     }
 }
